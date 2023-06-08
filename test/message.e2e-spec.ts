@@ -1,24 +1,58 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { io, Socket } from 'socket.io-client';
 
-describe('AppController (e2e)', () => {
+describe('MessageGateway', () => {
   let app: INestApplication;
+  let socket: Socket;
+  const testTime = 120000;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = moduleRef.createNestApplication();
+    await app.listen(3001);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  beforeEach(() => {
+    socket = io('http://localhost:3001');
+    socket.connect();
+  });
+
+  describe('findAll', () => {
+    it(
+      'should return existing chats',
+      (done) => {
+        socket.emit('findAllMessages', {}, (res) => {
+          expect(res).toBe('array');
+        });
+        done();
+      },
+      testTime,
+    );
+  });
+
+  describe('join', () => {
+    it(
+      'should return user data after joining chat',
+      (done) => {
+        socket.emit('join', { name: 'kate' }, (res) => {
+          expect(res).toBe('object');
+        });
+        done();
+      },
+      testTime,
+    );
+  });
+
+  afterEach(() => {
+    socket.disconnect();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
