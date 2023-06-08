@@ -13,6 +13,6 @@ export class AppController {
 
   @Get()
   async createTestUser() {
-    return await this.messageService.getClientName('123456');
+    return await this.messageService.findAll();
   }
 }

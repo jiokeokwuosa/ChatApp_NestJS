@@ -17,6 +17,9 @@ export class MessagesService {
 
   async findAll(): Promise<Message[]> {
     return await this.prisma.message.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
       include: {
         author: {
           select: {
@@ -29,18 +32,25 @@ export class MessagesService {
   }
 
   async join(name: string, clientId: string): Promise<User> {
-    return await this.prisma.user.create({
-      data: {
+    return await this.prisma.user.upsert({
+      create: {
         name,
         clientId,
+      },
+      update: {
+        name,
+        clientId,
+      },
+      where: {
+        name,
       },
     });
   }
 
-  async getClientName(clientId: string): Promise<string> {
+  async getClientName(id: string): Promise<string> {
     const user = await this.prisma.user.findFirst({
       where: {
-        clientId,
+        id,
       },
     });
     return user.name;
