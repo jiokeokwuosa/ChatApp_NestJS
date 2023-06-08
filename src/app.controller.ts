@@ -5,11 +5,7 @@ import { PrismaService } from './services/prisma.service';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly messageService: MessagesService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly messageService: MessagesService) {}
 
   @Get()
   async createTestUser() {

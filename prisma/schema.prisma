@@ -18,6 +18,8 @@ model User {
   messages Message[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at") 
+
+  @@map("users") 
 }
 
 model Message {
@@ -28,4 +30,6 @@ model Message {
   updatedAt DateTime @updatedAt @map("updated_at") 
 
   author    User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("messages") 
 }
