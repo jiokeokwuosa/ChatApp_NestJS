@@ -28,6 +28,7 @@ $ git clone https://github.com/jiokeokwuosa/ChatApp_NestJS.git
 $ cd ChatApp_NestJS
 $ create .env and add the necessarily values
 $ npm install
+$ npx prisma migrate dev(for migration)
 $ npm run start:dev
 ```
 
