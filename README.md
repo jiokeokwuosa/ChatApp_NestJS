@@ -1,4 +1,4 @@
-# Scanworks
+# CJ
 A chat application
 
 ## Features
